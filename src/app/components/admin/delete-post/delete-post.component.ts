@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FeedService } from '../../../services/feed.service';
 import { take } from 'rxjs';
 import { Post } from '../../../models/post.model';
@@ -10,6 +15,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
   selector: 'app-delete-post',
   imports: [TimestampToDatePipe],
   templateUrl: './delete-post.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './delete-post.component.scss',
 })
 export class DeletePostComponent implements OnInit {

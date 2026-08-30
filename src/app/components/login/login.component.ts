@@ -1,4 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/authentication.service';
@@ -17,6 +22,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
   selector: 'app-login',
   imports: [ReactiveFormsModule, HeaderComponent],
   templateUrl: './login.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit, OnDestroy {

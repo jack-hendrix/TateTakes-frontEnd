@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   Output,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { Post } from '../../models/post.model';
 import { TimestampToDatePipe } from '../../pipes/timestamp-to-date.pipe';
@@ -17,6 +18,7 @@ import { CommentService } from '../../services/comment.service';
   selector: 'app-post',
   imports: [TimestampToDatePipe, CommonModule],
   templateUrl: './post.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './post.component.scss',
 })
 export class PostComponent implements OnInit {

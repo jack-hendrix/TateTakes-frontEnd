@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -16,6 +21,7 @@ import { UploadService } from '../../../services/upload.service';
   selector: 'app-new-post',
   imports: [ReactiveFormsModule, TextFieldModule],
   templateUrl: './new-post.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './new-post.component.scss',
 })
 export class NewPostComponent implements OnInit {

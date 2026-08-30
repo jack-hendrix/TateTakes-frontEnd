@@ -1,4 +1,10 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -24,6 +30,7 @@ import { UploadService } from '../../../services/upload.service';
     TimestampToDatePipe,
   ],
   templateUrl: './drafts.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './drafts.component.scss',
 })
 export class DraftsComponent implements OnInit, OnDestroy {
