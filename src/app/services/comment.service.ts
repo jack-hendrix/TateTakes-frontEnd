@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   Firestore,
   collectionData,
@@ -14,7 +14,7 @@ import { Comments } from '../models/comments.model';
   providedIn: 'root',
 })
 export class CommentService {
-  constructor(private firestore: Firestore) {}
+  private firestore = inject(Firestore);
 
   getComments(parent: string): Observable<Comments[]> {
     const postsRef = collection(this.firestore, `posts/${parent}/comments`);

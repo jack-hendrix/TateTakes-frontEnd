@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Threat } from '../../../models/threat.model';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -10,6 +15,7 @@ import { TimestampToDatePipe } from '../../../pipes/timestamp-to-date.pipe';
   selector: 'app-view-threats',
   imports: [TimestampToDatePipe],
   templateUrl: './view-threats.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './view-threats.component.scss',
 })
 export class ViewThreatsComponent implements OnInit {

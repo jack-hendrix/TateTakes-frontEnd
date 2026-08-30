@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,6 +15,7 @@ import { HeaderComponent } from '../header/header.component';
   selector: 'app-subscribe',
   imports: [ReactiveFormsModule, HeaderComponent],
   templateUrl: './subscribe.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './subscribe.component.scss',
 })
 export class SubscribeComponent {

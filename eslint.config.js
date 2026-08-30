@@ -30,6 +30,10 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
+      // This codebase has not migrated its components to OnPush change
+      // detection; the Angular v22 upgrade preserved the previous default
+      // behavior explicitly via `ChangeDetectionStrategy.Eager`.
+      "@angular-eslint/prefer-on-push-component-change-detection": "off",
     },
   },
   {

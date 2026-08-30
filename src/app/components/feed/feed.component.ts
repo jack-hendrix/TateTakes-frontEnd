@@ -1,4 +1,10 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { FeedService } from '../../services/feed.service';
 import { Subject, take } from 'rxjs';
@@ -11,6 +17,7 @@ import { Router } from '@angular/router';
   selector: 'app-feed',
   imports: [HeaderComponent, PostComponent],
   templateUrl: './feed.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './feed.component.scss',
 })
 export class FeedComponent implements OnInit, OnDestroy {

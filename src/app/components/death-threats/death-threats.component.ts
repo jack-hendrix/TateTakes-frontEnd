@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -21,6 +21,7 @@ import { TextFieldModule } from '@angular/cdk/text-field';
     TextFieldModule,
   ],
   templateUrl: './death-threats.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './death-threats.component.scss',
 })
 export class DeathThreatsComponent {

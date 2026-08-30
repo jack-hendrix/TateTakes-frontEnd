@@ -1,5 +1,5 @@
 import { take } from 'rxjs';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { TimestampToDatePipe } from '../../../pipes/timestamp-to-date.pipe';
 import { Post } from '../../../models/post.model';
 import {
@@ -28,6 +28,7 @@ import { HeaderComponent } from '../../header/header.component';
     HeaderComponent,
   ],
   templateUrl: './expanded-post.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './expanded-post.component.scss',
 })
 export class ExpandedPostComponent {

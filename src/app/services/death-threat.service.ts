@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Threat } from '../models/threat.model';
 import {
   addDoc,
@@ -14,7 +14,7 @@ import { collectionData } from '@angular/fire/firestore';
   providedIn: 'root',
 })
 export class DeathThreatService {
-  constructor(private firestore: Firestore) {}
+  private firestore = inject(Firestore);
 
   newThreat(message: string) {
     const postsRef = collection(this.firestore, 'threats');

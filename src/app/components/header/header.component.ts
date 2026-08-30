@@ -1,6 +1,12 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/authentication.service';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -16,6 +22,7 @@ enum PAGES {
   selector: 'app-header',
   imports: [],
   templateUrl: './header.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit, OnDestroy {

@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FeedService } from '../../../services/feed.service';
 import { take } from 'rxjs';
 import { Post } from '../../../models/post.model';
@@ -18,6 +23,7 @@ import { UploadService } from '../../../services/upload.service';
   selector: 'app-edit-post',
   imports: [TimestampToDatePipe, ReactiveFormsModule, TextFieldModule],
   templateUrl: './edit-post.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './edit-post.component.scss',
 })
 export class EditPostComponent implements OnInit {
