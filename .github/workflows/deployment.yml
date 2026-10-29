@@ -15,21 +15,18 @@ jobs:
     steps:
       # Step 1: Check out the repository
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       # Step 2: Set up Node.js (match the version with your project)
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
-          node-version: '22.22.3'
+          node-version: 24
+          cache: npm
 
       # Step 3: Install dependencies
       - name: Install dependencies
-        run: npm install
-
-      # Step 4: Install Angular CLI globally
-      - name: Install Angular CLI globally
-        run: npm install -g @angular/cli
+        run: npm ci
 
       # Step 4: Set up the production environment file
       - name: Set up environment.prod.ts
