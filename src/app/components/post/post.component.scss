@@ -1,82 +1,222 @@
 @use "../../variables.scss" as *;
+
 .card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  transition: 0.3s;
-  border-radius: 5px;
-  max-width: 55%;
-  margin: auto;
-  margin-top: 20px;
-  overflow-wrap: break-word;
-  background-color: #fff;
-  border: 5px solid;
-  padding: 5px;
-  margin-bottom: 10px;
+  @include card;
+  position: relative;
+  margin-bottom: 34px;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+:host(:nth-child(even)) .card {
+  transform: rotate(0.5deg);
+}
+
+:host(:nth-child(odd)) .card {
+  transform: rotate(-0.5deg);
+}
+
+.badge {
+  position: absolute;
+  top: -22px;
+  right: 24px;
+  padding: 2px 16px;
+  font-family: $font-display;
+  font-size: 15px;
+  font-weight: 700;
+  color: $TateTakes-Ink;
+  border: 3px solid $TateTakes-Ink;
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 $TateTakes-Ink;
+  transform: rotate(4deg);
 }
 
 .card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: $shadow-lg;
+  transform: translate(-3px, -3px) rotate(0deg);
 }
 
 .container {
-  padding: 2px 16px;
-  border-radius: 5px 5px 0 0;
+  padding: 4px 0;
+  color: #3b4743;
+  line-height: 1.8;
 }
 
 .title {
-  color: $TateTakes-Red;
-  font-size: 25px;
-  font-weight: 500;
-  margin-left: 10px;
+  display: block;
+  font-family: $font-display;
+  color: $TateTakes-Ink;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
   cursor: pointer;
+  background-image: linear-gradient($TateTakes-Yellow, $TateTakes-Yellow);
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  background-size: 0% 38%;
+  transition: background-size 0.3s ease;
+
+  &:hover {
+    background-size: 100% 38%;
+  }
+}
+
+.readMore:hover,
+#comments:hover {
+  text-decoration: none;
 }
 
 .hoverable:hover {
   text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.title.hoverable:hover {
+  text-decoration: none;
 }
 
 .date {
-  color: $TateTakes-Blue;
-  font-size: 16px;
-  margin-left: 20px;
+  display: inline-block;
+  color: $TateTakes-Ink;
+  background: $TateTakes-Yellow;
+  border: 2px solid $TateTakes-Ink;
+  border-radius: 999px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 10px 0 0;
+  transform: rotate(-1.5deg);
 }
 
 .readMore {
-  color: $TateTakes-Red;
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 12px;
+  color: #fff;
+  background: $TateTakes-Red;
+  border: 2px solid $TateTakes-Ink;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
 }
 
 hr {
   border: 0;
-  height: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  margin-top: 15px;
-  margin-bottom: 15px;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(31, 42, 39, 0.25) 0 10px,
+    transparent 10px 18px
+  );
+  margin: 18px 0;
 }
 
 #comments {
-  margin-left: 5px;
+  display: inline-block;
   color: $TateTakes-Blue;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.imageWrap {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin: 4px 0 20px;
+  line-height: 0;
 }
 
 .postImage {
-  max-width: 40%;
-  max-height: 400px;
-  margin: auto;
+  display: block;
+  max-width: 100%;
+  max-height: 420px;
+  border: 3px solid $TateTakes-Ink;
+  border-radius: 12px;
+  object-fit: cover;
 }
 
 .imageLink {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
   font-size: 12px;
-  color: $TateTakes-Red;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: $TateTakes-Ink;
+  background: $TateTakes-Yellow;
+  border: 2.5px solid $TateTakes-Ink;
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 $TateTakes-Ink;
+  transition:
+    opacity 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+
+  &:hover {
+    background: $TateTakes-Orange;
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 $TateTakes-Ink;
+  }
+
+  &:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 $TateTakes-Ink;
+  }
+}
+
+@media (hover: none) {
+  .imageLink {
+    display: none;
+  }
+}
+
+@media (hover: hover) {
+  .imageLink {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  .imageWrap:hover .imageLink,
+  .imageLink:focus-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .imageWrap:hover .imageLink:hover {
+    transform: translate(-1px, -1px);
+  }
 }
 
 @media only screen and (max-width: 600px) {
-  .card {
-    margin-left: 0;
-    margin-right: 0;
-    max-width: 100%;
+  :host(:nth-child(odd)) .card,
+  :host(:nth-child(even)) .card,
+  .card:hover {
+    transform: none;
   }
 
-  .postImage {
-    max-width: 100%;
+  .badge,
+  .date {
+    transform: none;
+  }
+
+  .card {
+    padding: 22px 20px;
+    width: calc(100% - 20px);
+  }
+
+  .title {
+    font-size: 24px;
   }
 }

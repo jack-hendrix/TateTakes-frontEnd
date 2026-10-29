@@ -1,6 +1,19 @@
 <header class="header">
   <div class="header-inner">
-    <div class="nav-left">
+    <button
+      type="button"
+      class="menu-toggle"
+      aria-label="Menu"
+      aria-controls="site-menu"
+      [attr.aria-expanded]="menuOpen"
+      (click)="menuOpen = !menuOpen"
+    >
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
+    <div class="nav-left" id="site-menu" [class.open]="menuOpen">
       @if (currentPage !== PAGES.DeathThreats) {
         <a
           class="nav-link active"
@@ -138,7 +151,7 @@
       </svg>
     </a>
 
-    <div class="nav-right">
+    <div class="nav-right" [class.open]="menuOpen">
       <a
         class="nav-link active"
         (click)="subscribe()"

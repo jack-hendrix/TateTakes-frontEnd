@@ -1,29 +1,16 @@
 @use "../../variables.scss" as *;
 
 .card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  transition: 0.3s;
-  border-radius: 5px;
-  max-width: 55%;
-  margin: auto;
-  margin-top: 20px;
-  overflow-wrap: break-word;
-  background-color: #fff;
+  @include card;
+  max-width: 560px;
+  margin-top: 48px;
   margin-bottom: 50px;
-  border: 5px solid $TateTakes-Red;
-  padding: 15px;
+  border-color: $TateTakes-Orange;
 }
 
 input {
-  padding: 5px;
-  margin-bottom: 15px;
-  width: 45%;
-  margin-top: 5px;
-}
-
-.labelSection {
-  display: flex;
-  justify-content: space-between;
+  @include field;
+  margin: 12px 0 18px;
 }
 
 .formSection {
@@ -32,50 +19,20 @@ input {
 }
 
 label {
-  color: $TateTakes-Red;
-  font-size: 20px;
-  font-weight: 400;
+  font-family: $font-display;
+  color: $TateTakes-Ink;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 button {
-  padding: 15px;
-  border-radius: 5px;
-  font-size: 16px;
-  background-color: $TateTakes-Blue;
-  cursor: pointer;
-  color: $TateTakes-Orange;
-  border: none;
-  margin-top: 5px;
-}
-
-.disabled {
-  background-color: $TateTakes-Red;
-  cursor: not-allowed;
-  color: #fff;
-}
-
-.charCount {
-  font-size: 12px;
-  top: 35px;
-  right: 5px;
-  position: relative;
-}
-
-.red {
-  color: $TateTakes-Red;
+  @include button;
 }
 
 @media only screen and (max-width: 600px) {
   .card {
-    margin-left: 0;
-    margin-right: 0;
-    max-width: 100%;
-  }
-
-  .formSection {
-    width: 100%;
-  }
-  input {
-    width: 100%;
+    padding: 24px 20px;
+    width: calc(100% - 20px);
   }
 }

@@ -34,6 +34,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isAuthenticated = false;
   currentPage: string | undefined;
+  menuOpen = false;
 
   private $destroy = new Subject<void>();
 

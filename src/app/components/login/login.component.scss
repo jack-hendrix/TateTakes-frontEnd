@@ -1,61 +1,41 @@
 @use "../../variables.scss" as *;
 
 .card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  transition: 0.3s;
-  border-radius: 5px;
-  max-width: 55%;
-  margin: auto;
-  margin-top: 20px;
-  overflow-wrap: break-word;
-  background-color: #fff;
+  @include card;
+  max-width: 440px;
+  margin-top: 48px;
   margin-bottom: 50px;
-  border: 5px solid $TateTakes-Red;
-  padding: 15px;
+  border-color: $TateTakes-Blue;
 }
 
 h2 {
-  color: $TateTakes-Blue;
-  font-size: 20px;
-  margin-bottom: 20px;
+  color: $TateTakes-Ink;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 22px;
 }
 
 label {
-  color: $TateTakes-Red;
-  margin-bottom: 10px;
+  display: inline-block;
+  color: $TateTakes-Ink;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
 }
 
 input {
-  padding: 5px;
-  margin-bottom: 15px;
-  width: 45%;
+  @include field;
+  margin-bottom: 18px;
 }
 
 button {
-  padding: 15px;
-  border-radius: 5px;
-  font-size: 16px;
-  background-color: $TateTakes-Blue;
-  cursor: pointer;
-  color: $TateTakes-Orange;
-  border: none;
-  margin-top: 20px;
-}
-
-.disabled {
-  background-color: $TateTakes-Red;
-  cursor: not-allowed;
-  color: #fff;
+  @include button;
+  margin-top: 6px;
 }
 
 @media only screen and (max-width: 600px) {
   .card {
-    margin-left: 0;
-    margin-right: 0;
-    max-width: 100%;
-  }
-
-  input {
-    width: 100%;
+    padding: 24px 20px;
+    width: calc(100% - 20px);
   }
 }

@@ -4,6 +4,7 @@
   <app-post
     [post]="post"
     [index]="$index"
+    [total]="feed.length"
     (expandPost)="expandPost(post, $index)"
   ></app-post>
 }

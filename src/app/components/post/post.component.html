@@ -1,5 +1,11 @@
 <div class="card" [ngStyle]="{ 'border-color': colors[index % colors.length] }">
   <span
+    class="badge"
+    [ngStyle]="{ 'background-color': colors[index % colors.length] }"
+    aria-hidden="true"
+    >No. {{ (total || index + 1) - index }}</span
+  >
+  <span
     class="title hoverable"
     tabindex="0"
     (click)="expand()"
@@ -13,23 +19,34 @@
   <hr />
   <div class="container">
     @if (post.image && imageFound) {
-      <div>
+      <div class="imageWrap">
         <img
           class="postImage"
           [src]="post.image"
           (error)="imageError()"
           alt="Post Image"
         />
-        <br />
         <a
           class="imageLink"
           [href]="post.image"
           target="_blank"
           rel="noopener noreferrer"
-          tabindex="{0}"
-          >Full Sized Image</a
+          aria-label="View full size image"
+          ><svg
+            viewBox="0 0 24 24"
+            width="14"
+            height="14"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" />
+          </svg>
+          Full size</a
         >
-        <hr />
       </div>
     }
     <span [innerHTML]="textToShow"></span>

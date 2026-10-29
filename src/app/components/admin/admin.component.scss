@@ -1,17 +1,14 @@
 @use "../../variables.scss" as *;
 
 .admin-container {
-  width: 60%;
+  width: calc(100% - 32px);
+  max-width: 900px;
   background-color: #fff;
-  padding: 10px;
-  margin: auto;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  border: 5px solid $TateTakes-Red;
-}
-
-.admin-container:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px 20px;
+  margin: 28px auto 50px;
+  border-radius: $radius;
+  box-shadow: $shadow-sm;
+  border: 4px solid $TateTakes-Red;
 }
 
 .tab-contents {
