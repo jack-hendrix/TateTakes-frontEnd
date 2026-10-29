@@ -7,10 +7,10 @@
     (keydown)="goBack()"
     tabIndex="0"
   >
-    <span class="arrow">&lt;</span> Back
+    <span class="arrow" aria-hidden="true">&larr;</span> Back
   </a>
   <h1 class="title">
-    {{ post.title }}
+    <span class="hl">{{ post.title }}</span>
   </h1>
   <p class="date">
     {{ post.date | timestampToDate: "date-only" }}
@@ -18,23 +18,21 @@
   <hr />
   <div class="container">
     @if (post.image && imageFound) {
-      <div>
+      <div class="imageWrap">
         <img
           class="postImage"
           [src]="post.image"
           (error)="imageError()"
           alt="Post Image"
         />
-        <br />
         <a
           class="imageLink"
-          tabIndex="{0}"
           [href]="post.image"
           target="_blank"
           rel="noopener noreferrer"
-          >Full Sized Image</a
+          aria-label="View full size image"
+          ><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" /></svg> Full size</a
         >
-        <hr />
       </div>
     }
     <p [innerHTML]="post.body"></p>

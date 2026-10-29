@@ -24,6 +24,7 @@ import { CommentService } from '../../services/comment.service';
 export class PostComponent implements OnInit {
   @Input({ required: true }) post!: Post;
   @Input({ required: true }) index!: number;
+  @Input() total = 0;
   @Output() expandPost = new EventEmitter<void>();
 
   private commentService = inject(CommentService);

@@ -3,3 +3,91 @@ $TateTakes-Blue: #5b8e7d;
 $TateTakes-Orange: #f4a259;
 $TateTakes-Yellow: #f4e285;
 $TateTakes-Green: #8cb369;
+
+$TateTakes-Ink: #1f2a27;
+$TateTakes-Muted: #6b7773;
+$TateTakes-Teal-Dark: #23413a;
+$TateTakes-Page: #faf6ee;
+$TateTakes-Line: #ece6d8;
+
+$font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+$font-display: "Fraunces", Georgia, "Times New Roman", serif;
+
+$radius: 18px;
+$shadow-sm: 6px 6px 0 $TateTakes-Ink;
+$shadow-lg: 9px 9px 0 $TateTakes-Ink;
+
+@mixin card {
+  background: #fff;
+  border: 4px solid $TateTakes-Ink;
+  border-radius: $radius;
+  box-shadow: $shadow-sm;
+  max-width: 760px;
+  width: calc(100% - 32px);
+  margin: 28px auto 12px;
+  padding: 32px 36px;
+  overflow-wrap: break-word;
+  transition:
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+@mixin field {
+  width: 100%;
+  padding: 11px 14px;
+  font: inherit;
+  font-size: 15px;
+  color: $TateTakes-Ink;
+  background: $TateTakes-Page;
+  border: 2.5px solid $TateTakes-Ink;
+  border-radius: 12px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+
+  &:focus {
+    background: #fff;
+    box-shadow: 4px 4px 0 $TateTakes-Orange;
+  }
+}
+
+@mixin button {
+  padding: 12px 28px;
+  border: 3px solid $TateTakes-Ink;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: $TateTakes-Ink;
+  background: $TateTakes-Orange;
+  box-shadow: 4px 4px 0 $TateTakes-Ink;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: $TateTakes-Green;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 $TateTakes-Ink;
+  }
+
+  &:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 1px 1px 0 $TateTakes-Ink;
+  }
+
+  &:disabled,
+  &.disabled {
+    background: #e4dfd0;
+    color: $TateTakes-Muted;
+    box-shadow: 2px 2px 0 $TateTakes-Muted;
+    border-color: $TateTakes-Muted;
+    cursor: not-allowed;
+  }
+}
