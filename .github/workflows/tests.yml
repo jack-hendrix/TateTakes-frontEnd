@@ -27,10 +27,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # environment.ts is git-ignored. The tests never reach Firebase, so a
-      # placeholder config is enough and no secrets are needed.
+      # environment.ts is git-ignored (so its folder doesn't exist in a fresh
+      # checkout). The tests never reach Firebase, so a placeholder config is
+      # enough and no secrets are needed.
       - name: Create test environment file
         run: |
+          mkdir -p src/app/environments
           cat > src/app/environments/environment.ts <<'EOF'
           export const environment = {
             production: false,
