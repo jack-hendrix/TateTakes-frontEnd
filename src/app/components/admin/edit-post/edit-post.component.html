@@ -17,8 +17,8 @@
           <a
             (click)="selectPost(post)"
             class="edit"
-            (keydown)="selectPost(post)"
-            tabindex="{0}"
+            (keydown.enter)="selectPost(post)"
+            tabindex="0"
             >Edit Post</a
           >
         </div>
@@ -30,8 +30,8 @@
       <a
         (click)="goBack()"
         class="backButton"
-        tabindex="{0}"
-        (keydown)="goBack()"
+        tabindex="0"
+        (keydown.enter)="goBack()"
       >
         <span class="arrow">&lt;</span> Back
       </a>
@@ -55,6 +55,7 @@
           </span>
           <input
             type="file"
+            accept="image/*"
             id="image"
             formControlName="image"
             (change)="onFileSelected($event)"

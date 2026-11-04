@@ -1,34 +1,34 @@
-<div class="card" [ngStyle]="{ 'border-color': colors[index % colors.length] }">
+<div class="card" [style.border-color]="colors[index() % colors.length]">
   <span
     class="badge"
-    [ngStyle]="{ 'background-color': colors[index % colors.length] }"
+    [style.background-color]="colors[index() % colors.length]"
     aria-hidden="true"
-    >No. {{ (total || index + 1) - index }}</span
+    >No. {{ (total() || index() + 1) - index() }}</span
   >
   <span
     class="title hoverable"
     tabindex="0"
     (click)="expand()"
-    (keydown)="expand()"
+    (keydown.enter)="expand()"
   >
-    {{ post.title }}
+    {{ post().title }}
   </span>
   <p class="date">
-    {{ post.date | timestampToDate: "date-only" }}
+    {{ post().date | timestampToDate: "date-only" }}
   </p>
   <hr />
   <div class="container">
-    @if (post.image && imageFound) {
+    @if (post().image && imageFound) {
       <div class="imageWrap">
         <img
           class="postImage"
-          [src]="post.image"
+          [src]="post().image"
           (error)="imageError()"
           alt="Post Image"
         />
         <a
           class="imageLink"
-          [href]="post.image"
+          [href]="post().image"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="View full size image"
@@ -50,12 +50,12 @@
       </div>
     }
     <span [innerHTML]="textToShow"></span>
-    @if (post.body.length > 700) {
+    @if (post().body.length > 700) {
       <a
         class="readMore hoverable"
         (click)="expand()"
-        (keydown)="expand()"
-        tabindex="{0}"
+        (keydown.enter)="expand()"
+        tabindex="0"
       >
         Read More</a
       >
@@ -66,8 +66,8 @@
     id="comments"
     class="hoverable"
     (click)="showComments()"
-    (keydown)="showComments()"
-    tabindex="{0}"
+    (keydown.enter)="showComments()"
+    tabindex="0"
   >
     {{ commentCount === 0 ? "Leave a comment" : commentCount + " comment"
     }}{{ commentCount > 1 ? "s" : "" }}

@@ -60,9 +60,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    this.spinner.show();
     if (!this.isAuthenticated) {
       if (this.loginForm.valid) {
+        this.spinner.show();
         const { email, password } = this.loginForm.value;
         this.authService
           .login(email, password)
@@ -77,7 +77,6 @@ export class LoginComponent implements OnInit, OnDestroy {
           });
       }
     } else {
-      this.spinner.hide();
       this.toastr.error('You are already logged in', 'Something went wrong');
     }
   }

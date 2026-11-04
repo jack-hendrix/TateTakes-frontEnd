@@ -6,9 +6,7 @@ import { provideHttpClient, withXhr } from '@angular/common/http';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { provideToastr } from 'ngx-toastr';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 
 export const appConfig: ApplicationConfig = {
@@ -25,8 +23,6 @@ export const appConfig: ApplicationConfig = {
       preventDuplicates: true,
       progressBar: true,
     }),
-    provideAnimations(),
     NgxSpinnerService,
-    provideAnimationsAsync(),
   ],
 };

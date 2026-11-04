@@ -4,7 +4,7 @@
     <div class="formSection">
       <div class="labelSection">
         <label for="message">Death Threat:</label>
-        <span class="charCount" [ngClass]="{ red: getMessageLength() === 1000 }"
+        <span class="charCount" [class.red]="getMessageLength() === 1000"
           >{{ getMessageLength() || 0 }}/1000</span
         >
       </div>

@@ -72,11 +72,18 @@ export class EditPostComponent implements OnInit {
 
       this.spinner.show();
 
-      this.uploadService.uploadImages(this.selectedFile).subscribe((res) => {
-        if (res.success) {
-          this.imageUrl = res.imageUrl;
-        }
-        this.spinner.hide();
+      this.uploadService.uploadImages(this.selectedFile).subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.imageUrl = res.imageUrl;
+          }
+          this.spinner.hide();
+        },
+        error: (error) => {
+          console.error(error);
+          this.spinner.hide();
+          this.toastr.error('Please try again later', 'Image upload failed');
+        },
       });
     }
   }

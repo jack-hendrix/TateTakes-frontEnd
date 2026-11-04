@@ -1,6 +1,7 @@
 import {
   Component,
   inject,
+  OnDestroy,
   OnInit,
   ChangeDetectionStrategy,
 } from '@angular/core';
@@ -24,7 +25,7 @@ import { UploadService } from '../../../services/upload.service';
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './new-post.component.scss',
 })
-export class NewPostComponent implements OnInit {
+export class NewPostComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private feedService = inject(FeedService);
   private toastr = inject(ToastrService);
@@ -39,6 +40,8 @@ export class NewPostComponent implements OnInit {
   selectedFile: File | null = null;
   imageUrl = '';
 
+  private autosaveInterval?: ReturnType<typeof setInterval>;
+
   constructor() {
     this.postForm = this.fb.group({
       title: ['', [Validators.required]],
@@ -48,11 +51,10 @@ export class NewPostComponent implements OnInit {
   }
 
   ngOnInit() {
-    setInterval(() => {
+    this.autosaveInterval = setInterval(() => {
       if (this.isValidDraft) {
         this.autosaveText = 'Saving...';
-        const { title, body } = this.postForm.value;
-        const formattedText = body.replace(/\n/g, '<br>');
+        const { title, formattedText } = this.formValues();
         this.autosaving = true;
         if (this.draftId === '') {
           this.draftsService
@@ -81,6 +83,18 @@ export class NewPostComponent implements OnInit {
     }, 30000);
   }
 
+  ngOnDestroy() {
+    clearInterval(this.autosaveInterval);
+  }
+
+  private formValues(): { title: string; formattedText: string } {
+    const { title, body } = this.postForm.value;
+    return {
+      title: title ?? '',
+      formattedText: (body ?? '').replace(/\n/g, '<br>'),
+    };
+  }
+
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input?.files?.length) {
@@ -88,11 +102,18 @@ export class NewPostComponent implements OnInit {
 
       this.spinner.show();
 
-      this.uploadService.uploadImages(this.selectedFile).subscribe((res) => {
-        if (res.success) {
-          this.imageUrl = res.imageUrl;
-        }
-        this.spinner.hide();
+      this.uploadService.uploadImages(this.selectedFile).subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.imageUrl = res.imageUrl;
+          }
+          this.spinner.hide();
+        },
+        error: (error) => {
+          console.error(error);
+          this.spinner.hide();
+          this.toastr.error('Please try again later', 'Image upload failed');
+        },
       });
     }
   }
@@ -100,16 +121,24 @@ export class NewPostComponent implements OnInit {
   submitNewPost() {
     if (this.postForm.valid) {
       this.spinner.show();
-      const { title, body } = this.postForm.value;
-      const formattedText = body.replace(/\n/g, '<br>');
+      const { title, formattedText } = this.formValues();
       this.feedService
         .newPost(title, formattedText, this.imageUrl)
         .then(() => {
           this.postForm.reset();
           this.imageUrl = '';
-          this.draftsService.deleteDraft(this.draftId).then(() => {
-            this.autosaveText = 'Draft not saved!';
-          });
+          const draftId = this.draftId;
+          this.draftId = '';
+          this.autosaveText = 'Draft not saved!';
+          if (draftId) {
+            this.draftsService.deleteDraft(draftId).catch((error) => {
+              console.error(error);
+              this.toastr.error(
+                'Please delete it from the Drafts tab',
+                'Post published, but its draft could not be deleted',
+              );
+            });
+          }
           this.toastr.success(
             `Your post, ${title}, has been published successfully`,
             'Success',
@@ -129,8 +158,7 @@ export class NewPostComponent implements OnInit {
     event.preventDefault();
     event.stopPropagation();
     this.spinner.show();
-    const { title, body } = this.postForm.value;
-    const formattedText = body.replace(/\n/g, '<br>');
+    const { title, formattedText } = this.formValues();
     const post = {
       title: title,
       image: this.imageUrl,
@@ -143,6 +171,9 @@ export class NewPostComponent implements OnInit {
         .then(() => {
           this.postForm.reset();
           this.imageUrl = '';
+          // The form is cleared, so the next autosave starts a new draft.
+          this.draftId = '';
+          this.autosaveText = 'Draft not saved!';
           this.toastr.success(`Your draft was saved successfully`, 'Success');
         })
         .catch((error) => {
@@ -173,6 +204,6 @@ export class NewPostComponent implements OnInit {
 
   get isValidDraft(): boolean {
     const { title, body } = this.postForm.value;
-    return title || this.imageUrl || body;
+    return !!(title || this.imageUrl || body);
   }
 }
