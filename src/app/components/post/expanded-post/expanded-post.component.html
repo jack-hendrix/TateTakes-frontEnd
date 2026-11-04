@@ -1,10 +1,10 @@
 <app-header></app-header>
-<div class="card" [ngStyle]="{ 'border-color': colors[index % colors.length] }">
+<div class="card" [style.border-color]="colors[index % colors.length]">
   <a
     (click)="goBack()"
     class="backButton"
     href="#"
-    (keydown)="goBack()"
+    (keydown.enter)="goBack()"
     tabIndex="0"
   >
     <span class="arrow" aria-hidden="true">&larr;</span> Back
@@ -56,7 +56,7 @@
     <div class="formSection">
       <div class="labelSection">
         <label class="formLabel" for="author">Author:</label>
-        <span class="charCount" [ngClass]="{ red: getAuthorLength() === 50 }"
+        <span class="charCount" [class.red]="getAuthorLength() === 50"
           >{{ getAuthorLength() || 0 }}/50</span
         >
       </div>
@@ -70,7 +70,7 @@
     <div class="formSection">
       <div class="labelSection">
         <label class="formLabel" for="body">Comment:</label>
-        <span class="charCount" [ngClass]="{ red: getCommentLength() === 500 }"
+        <span class="charCount" [class.red]="getCommentLength() === 500"
           >{{ getCommentLength() || 0 }}/500</span
         >
       </div>

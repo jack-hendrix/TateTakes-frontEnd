@@ -9,17 +9,11 @@ import { ToastrService } from 'ngx-toastr';
 import { DeathThreatService } from '../../services/death-threat.service';
 import { HeaderComponent } from '../header/header.component';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { CommonModule } from '@angular/common';
 import { TextFieldModule } from '@angular/cdk/text-field';
 
 @Component({
   selector: 'app-death-threats',
-  imports: [
-    ReactiveFormsModule,
-    HeaderComponent,
-    CommonModule,
-    TextFieldModule,
-  ],
+  imports: [ReactiveFormsModule, HeaderComponent, TextFieldModule],
   templateUrl: './death-threats.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './death-threats.component.scss',

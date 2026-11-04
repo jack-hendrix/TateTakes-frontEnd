@@ -1,5 +1,10 @@
-import { take } from 'rxjs';
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Subscription, take } from 'rxjs';
+import {
+  Component,
+  inject,
+  OnDestroy,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { TimestampToDatePipe } from '../../../pipes/timestamp-to-date.pipe';
 import { Post } from '../../../models/post.model';
 import {
@@ -12,7 +17,6 @@ import { CommentService } from '../../../services/comment.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Comments } from '../../../models/comments.model';
-import { CommonModule } from '@angular/common';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FeedService } from '../../../services/feed.service';
@@ -23,7 +27,6 @@ import { HeaderComponent } from '../../header/header.component';
   imports: [
     TimestampToDatePipe,
     ReactiveFormsModule,
-    CommonModule,
     TextFieldModule,
     HeaderComponent,
   ],
@@ -31,7 +34,7 @@ import { HeaderComponent } from '../../header/header.component';
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './expanded-post.component.scss',
 })
-export class ExpandedPostComponent {
+export class ExpandedPostComponent implements OnDestroy {
   commentForm: FormGroup;
   comments: Comments[] = [];
   colors: string[] = ['#BC4B51', '#5B8E7D', '#F4A259', '#8CB369'];
@@ -53,6 +56,8 @@ export class ExpandedPostComponent {
   };
   index = 1;
 
+  private commentsSub?: Subscription;
+
   constructor() {
     this.commentForm = this.fb.group({
       author: ['', [Validators.required, Validators.maxLength(50)]],
@@ -61,11 +66,12 @@ export class ExpandedPostComponent {
 
     this.route.paramMap.subscribe((params) => {
       this.postId = params.get('postId') ?? '';
-      this.index = parseInt(params.get('index')!) ?? 1;
+      const index = parseInt(params.get('index') ?? '', 10);
+      this.index = Number.isNaN(index) ? 1 : index;
     });
 
     this.spinner.show();
-    const currentNav = this.router.getCurrentNavigation();
+    const currentNav = this.router.currentNavigation();
     const post = currentNav?.extras?.state?.['post'] ?? null;
     if (post) {
       this.post = post;
@@ -100,11 +106,11 @@ export class ExpandedPostComponent {
         .then(() => {
           this.spinner.hide();
           this.commentForm.reset();
+          // The comment listener is live, so the new comment shows up on its own.
           this.toastr.success(
             `Your comment has been published succesfully`,
             'Success',
           );
-          this.getComments();
         })
         .catch((error) => {
           this.spinner.hide();
@@ -118,19 +124,26 @@ export class ExpandedPostComponent {
     this.router.navigate(['/feed']);
   }
 
+  ngOnDestroy() {
+    this.commentsSub?.unsubscribe();
+  }
+
   getComments() {
     if (this.postId) {
-      this.commentService.getComments(this.postId).subscribe({
-        next: (results) => {
-          this.comments = results;
-          this.spinner.hide();
-        },
-        error: (error) => {
-          this.spinner.hide();
-          console.error(error);
-          this.toastr.error('Please try again later', 'Something went wrong');
-        },
-      });
+      this.commentsSub?.unsubscribe();
+      this.commentsSub = this.commentService
+        .getComments(this.postId)
+        .subscribe({
+          next: (results) => {
+            this.comments = results;
+            this.spinner.hide();
+          },
+          error: (error) => {
+            this.spinner.hide();
+            console.error(error);
+            this.toastr.error('Please try again later', 'Something went wrong');
+          },
+        });
     }
   }
 

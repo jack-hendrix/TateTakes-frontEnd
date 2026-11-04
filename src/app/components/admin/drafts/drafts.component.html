@@ -21,8 +21,8 @@
             <a
               (click)="openDraft(draft)"
               class="edit"
-              (keydown)="openDraft(draft)"
-              tabindex="{0}"
+              (keydown.enter)="openDraft(draft)"
+              tabindex="0"
               >Edit Draft</a
             >
           </div>
@@ -36,7 +36,7 @@
         (click)="goBack()"
         class="backButton"
         tabindex="0"
-        (keydown)="goBack()"
+        (keydown.enter)="goBack()"
       >
         <span class="arrow">&lt;</span> Back
       </a>
@@ -44,7 +44,7 @@
         (click)="deleteDraft()"
         class="deleteButton"
         tabindex="0"
-        (keydown)="deleteDraft()"
+        (keydown.enter)="deleteDraft()"
       >
         Delete Draft
       </a>
@@ -70,6 +70,7 @@
           </span>
           <input
             type="file"
+            accept="image/*"
             id="image"
             formControlName="image"
             (change)="onFileSelected($event)"

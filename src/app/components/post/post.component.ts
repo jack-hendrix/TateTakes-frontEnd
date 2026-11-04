@@ -1,31 +1,29 @@
 import { take } from 'rxjs';
 import {
   Component,
-  EventEmitter,
   inject,
-  Input,
+  input,
   OnInit,
-  Output,
+  output,
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { Post } from '../../models/post.model';
 import { TimestampToDatePipe } from '../../pipes/timestamp-to-date.pipe';
 import { ToastrService } from 'ngx-toastr';
-import { CommonModule } from '@angular/common';
 import { CommentService } from '../../services/comment.service';
 
 @Component({
   selector: 'app-post',
-  imports: [TimestampToDatePipe, CommonModule],
+  imports: [TimestampToDatePipe],
   templateUrl: './post.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './post.component.scss',
 })
 export class PostComponent implements OnInit {
-  @Input({ required: true }) post!: Post;
-  @Input({ required: true }) index!: number;
-  @Input() total = 0;
-  @Output() expandPost = new EventEmitter<void>();
+  readonly post = input.required<Post>();
+  readonly index = input.required<number>();
+  readonly total = input(0);
+  readonly expandPost = output<void>();
 
   private commentService = inject(CommentService);
   private toastr = inject(ToastrService);
@@ -37,14 +35,15 @@ export class PostComponent implements OnInit {
   imageFound = true;
 
   ngOnInit(): void {
-    if (this.post.body.length > 700) {
-      this.textToShow = this.post.body.slice(0, 1500) + '...';
+    if (this.post().body.length > 1500) {
+      this.textToShow = this.post().body.slice(0, 1500) + '...';
     } else {
-      this.textToShow = this.post.body;
+      this.textToShow = this.post().body;
     }
-    if (this.post?.id) {
+    const postId = this.post().id;
+    if (postId) {
       this.commentService
-        .getComments(this.post.id)
+        .getComments(postId)
         .pipe(take(1))
         .subscribe({
           next: (resp) => {
@@ -67,7 +66,7 @@ export class PostComponent implements OnInit {
   }
 
   imageError() {
-    console.error(`Error finding image\n${this.post.image}`);
+    console.error(`Error finding image\n${this.post().image}`);
     this.imageFound = false;
   }
 }

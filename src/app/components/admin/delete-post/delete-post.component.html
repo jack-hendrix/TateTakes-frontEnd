@@ -15,8 +15,8 @@
       <a
         class="delete"
         (click)="deletePost(post.id || '')"
-        (keydown)="deletePost(post.id || '')"
-        tabindex="{0}"
+        (keydown.enter)="deletePost(post.id || '')"
+        tabindex="0"
         >Delete Post</a
       >
       <hr />

@@ -28,6 +28,7 @@ export class FeedComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();
 
   feed: Post[] = [];
+  loaded = false;
   somethingWentWrong = false;
 
   ngOnInit(): void {
@@ -39,6 +40,7 @@ export class FeedComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: Post[]) => {
           this.feed = response;
+          this.loaded = true;
           this.spinner.hide();
           window.scrollTo(0, 0);
         },

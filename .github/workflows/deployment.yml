@@ -15,11 +15,13 @@ jobs:
     steps:
       # Step 1: Check out the repository
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       # Step 2: Set up Node.js (match the version with your project)
       - name: Set up Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
@@ -29,12 +31,16 @@ jobs:
         run: npm ci
 
       # Step 4: Set up the production environment file
+      # The secret is passed through an env var rather than interpolated into
+      # the script, so its contents are never parsed as shell.
       - name: Set up environment.prod.ts
+        env:
+          ENVIRONMENT_PROD: ${{ secrets.ENVIRONMENT_PROD }}
         run: |
           echo "Replacing environment.ts with environment.prod.ts"
           mkdir -p src/app/environments
-          echo "${{ secrets.ENVIRONMENT_PROD }}" > src/app/environments/environment.ts
-          echo "${{ secrets.ENVIRONMENT_PROD }}" > src/app/environments/environment.prod.ts
+          printf '%s\n' "$ENVIRONMENT_PROD" > src/app/environments/environment.ts
+          printf '%s\n' "$ENVIRONMENT_PROD" > src/app/environments/environment.prod.ts
 
       # Step 5: Build the Angular project in production mode
       - name: Build Angular project
@@ -45,9 +51,11 @@ jobs:
           echo "Listing files in the build directory:"
           ls -la /home/runner/work/TateTakes-frontEnd/TateTakes-frontEnd/dist/tate-blog/browser
 
+      # Third-party actions that receive the SSH key are pinned to a commit so a
+      # moved tag can't change the code that runs.
       # Upload the build files to the remote server
       - name: Upload build files to server
-        uses: appleboy/scp-action@v0.1.2
+        uses: appleboy/scp-action@f57f59fba9f7f05a7857eeb06d556738cc696279 # v0.1.2
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
@@ -55,32 +63,41 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           source: "/home/runner/work/TateTakes-frontEnd/TateTakes-frontEnd/dist/tate-blog/browser/*"
           target: "/home/${{ secrets.SERVER_USER }}/TateTakes-frontEnd/"
+          # Empty the upload folder first so old hashed bundles don't pile up
+          # and get copied into the site on the next deploy.
+          rm: true
 
       # Deploy to the server using SSH
       - name: Deploy to server
-        uses: appleboy/ssh-action@v0.1.7
+        uses: appleboy/ssh-action@d91a1af6f57cd4478ceee14d7705601dafabaa19 # v0.1.7
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            # Stop the service and remove old files
-            echo "Stopping previous service (if any)..."
+            set -e
+            UPLOAD_DIR="/home/${{ secrets.SERVER_USER }}/TateTakes-frontEnd"
+
+            # scp-action keeps part of the runner's path under the target
+            # folder, so find the build instead of hard-coding where it lands.
+            BUILD_DIR=$(find "$UPLOAD_DIR" -type d -path '*/dist/tate-blog/browser' | head -n 1)
+            if [ -z "$BUILD_DIR" ] || [ ! -f "$BUILD_DIR/index.html" ]; then
+              echo "No build found in $UPLOAD_DIR; leaving the live site untouched."
+              exit 1
+            fi
+            echo "Deploying $BUILD_DIR"
+
+            echo "Stopping nginx..."
             sudo systemctl stop nginx
+            # Bring nginx back up even if a step below fails.
+            trap 'echo "Starting nginx..."; sudo systemctl start nginx' EXIT
 
-            # Remove old files
-            echo "Removing old files..."
+            echo "Replacing site files..."
             sudo rm -rf /var/www/tatetakes/*
+            sudo cp -r "$BUILD_DIR"/. /var/www/tatetakes/
 
-            # Copy new build files
-            echo "Copying new build files..."
-            sudo cp -r /home/${{ secrets.SERVER_USER }}/TateTakes-frontEnd/${{ secrets.SERVER_USER }}/workspace/dist/tate-blog/browser/* /var/www/tatetakes/
-
-            # Restart the service
-            echo "Starting the service again..."
-            sudo systemctl start nginx
-
-            #Clean up transfer
-            echo "Cleaning up ssh transfer folder"
-            rm -rf /home/${{ secrets.SERVER_USER }}/tateBlog-frontEnd/
+            # tateBlog-frontEnd is the upload folder from before the repo was
+            # renamed; remove it too if it's still there.
+            echo "Cleaning up upload folders..."
+            rm -rf "$UPLOAD_DIR" "/home/${{ secrets.SERVER_USER }}/tateBlog-frontEnd"

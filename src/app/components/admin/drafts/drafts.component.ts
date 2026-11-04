@@ -23,12 +23,7 @@ import { UploadService } from '../../../services/upload.service';
 
 @Component({
   selector: 'app-drafts',
-  imports: [
-    ReactiveFormsModule,
-    TextFieldModule,
-    ReactiveFormsModule,
-    TimestampToDatePipe,
-  ],
+  imports: [ReactiveFormsModule, TextFieldModule, TimestampToDatePipe],
   templateUrl: './drafts.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './drafts.component.scss',
@@ -50,6 +45,7 @@ export class DraftsComponent implements OnInit, OnDestroy {
   imageUrl = '';
 
   private $destroy = new Subject<void>();
+  private autosaveInterval?: ReturnType<typeof setInterval>;
 
   constructor() {
     this.draftForm = this.fb.group({
@@ -67,11 +63,10 @@ export class DraftsComponent implements OnInit, OnDestroy {
         this.getDrafts();
       });
 
-    setInterval(() => {
+    this.autosaveInterval = setInterval(() => {
       if (this.isDraftValid() && this.currentDraft) {
         this.autosaveText = 'Saving...';
-        const { title, body } = this.draftForm.value;
-        const formattedText = body.replace(/\n/g, '<br>');
+        const { title, formattedText } = this.formValues();
         if (this.currentDraft?.id) {
           const post = {
             title: title,
@@ -93,8 +88,17 @@ export class DraftsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    clearInterval(this.autosaveInterval);
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  private formValues(): { title: string; formattedText: string } {
+    const { title, body } = this.draftForm.value;
+    return {
+      title: title ?? '',
+      formattedText: (body ?? '').replace(/\n/g, '<br>'),
+    };
   }
 
   onFileSelected(event: Event) {
@@ -104,11 +108,18 @@ export class DraftsComponent implements OnInit, OnDestroy {
 
       this.spinner.show();
 
-      this.uploadService.uploadImages(this.selectedFile).subscribe((res) => {
-        if (res.success) {
-          this.imageUrl = res.imageUrl;
-        }
-        this.spinner.hide();
+      this.uploadService.uploadImages(this.selectedFile).subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.imageUrl = res.imageUrl;
+          }
+          this.spinner.hide();
+        },
+        error: (error) => {
+          console.error(error);
+          this.spinner.hide();
+          this.toastr.error('Please try again later', 'Image upload failed');
+        },
       });
     }
   }
@@ -149,8 +160,7 @@ export class DraftsComponent implements OnInit, OnDestroy {
   submitEditDraft() {
     if (this.draftForm.valid && this.currentDraft?.id) {
       this.spinner.show();
-      const { title, body } = this.draftForm.value;
-      const formattedText: string = body.replace(/\n/g, '<br>');
+      const { title, formattedText } = this.formValues();
       const post: Post = {
         title: title,
         body: formattedText,
@@ -165,8 +175,8 @@ export class DraftsComponent implements OnInit, OnDestroy {
         .catch((err) => {
           console.error(err);
           this.toastr.error(
-            'Please try deleting again later',
-            'Draft published, but could not be deleted',
+            'Please try again later',
+            'Draft could not be saved',
           );
         })
         .finally(() => {
@@ -179,7 +189,7 @@ export class DraftsComponent implements OnInit, OnDestroy {
 
   isDraftValid(): boolean {
     const { title, body } = this.draftForm.value;
-    return title || body || this.imageUrl;
+    return !!(title || body || this.imageUrl);
   }
 
   publishDraft(event: MouseEvent) {
@@ -187,8 +197,7 @@ export class DraftsComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     if (this.draftForm.valid && this.currentDraft?.id) {
       this.spinner.show();
-      const { title, body } = this.draftForm.value;
-      const formattedText = body.replace(/\n/g, '<br>');
+      const { title, formattedText } = this.formValues();
       this.feedService
         .newPost(title, formattedText, this.imageUrl)
         .then(() => {

@@ -19,7 +19,7 @@
           class="nav-link active"
           (click)="threaten()"
           tabindex="0"
-          (keydown)="threaten()"
+          (keydown.enter)="threaten()"
           >Send Death Threats to Author</a
         >
       } @else {
@@ -27,7 +27,12 @@
       }
     </div>
 
-    <a class="logo-link" (click)="goHome()" tabindex="0" (keydown)="goHome()">
+    <a
+      class="logo-link"
+      (click)="goHome()"
+      tabindex="0"
+      (keydown.enter)="goHome()"
+    >
       <svg
         viewBox="24.179993 13.380005 295.50635 64"
         preserveAspectRatio="xMidYMid"
@@ -156,7 +161,7 @@
         class="nav-link active"
         (click)="subscribe()"
         tabindex="0"
-        (keydown)="subscribe()"
+        (keydown.enter)="subscribe()"
         >Subscribe</a
       >
       @if (isAuthenticated && currentPage !== PAGES.Admin) {
@@ -164,7 +169,7 @@
           class="nav-link active"
           (click)="admin()"
           tabindex="0"
-          (keydown)="admin()"
+          (keydown.enter)="admin()"
           >Admin</a
         >
       } @else if (isAuthenticated && currentPage === PAGES.Admin) {
@@ -175,7 +180,7 @@
           class="nav-link active"
           (click)="logout()"
           tabindex="0"
-          (keydown)="logout()"
+          (keydown.enter)="logout()"
           >Log Out</a
         >
       } @else if (!isAuthenticated && currentPage !== PAGES.Login) {
@@ -183,7 +188,7 @@
           class="nav-link active"
           (click)="login()"
           tabindex="0"
-          (keydown)="login()"
+          (keydown.enter)="login()"
           >Log In</a
         >
       } @else if (!isAuthenticated && currentPage === PAGES.Login) {
