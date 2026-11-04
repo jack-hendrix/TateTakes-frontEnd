@@ -55,7 +55,7 @@ jobs:
       # moved tag can't change the code that runs.
       # Upload the build files to the remote server
       - name: Upload build files to server
-        uses: appleboy/scp-action@f57f59fba9f7f05a7857eeb06d556738cc696279 # v0.1.2
+        uses: appleboy/scp-action@ff85246acaad7bdce478db94a363cd2bf7c90345 # v1.0.0
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
